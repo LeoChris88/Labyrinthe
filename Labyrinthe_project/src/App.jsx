@@ -48,12 +48,9 @@ function App() {
 
   const gridSize = 10;
 
-  // --- NOUVEAU : Déplacement via clic ---
   const handleTileClick = (x, y) => {
     setPlayerPos({ x, y });
   };
-
-  // --- FIN : plus de useEffect clavier ---
 
   return (
     <div className="App">
@@ -67,8 +64,8 @@ function App() {
           <Grid
             PlayerPosition={PlayerPosition}
             gridSize={gridSize}
-            onTileClick={handleTileClick}   // ← ajouté
-            goToScoreboard={goToScoreboard} // si ton Grid l'utilise
+            onTileClick={handleTileClick}
+            goToScoreboard={goToScoreboard}
           />
         </div>
       )}
