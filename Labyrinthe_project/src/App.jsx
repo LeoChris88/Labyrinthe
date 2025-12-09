@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import Grid from "./game/Grid";
+import Home from "./pages/Home";
+import Scoreboard from "./pages/Scoreboard";
+import { saveScore } from "./utils/score";
+import "./App.css" ;
 
 function App() {
-  const [playerPosition, setPlayerPos] = useState({ x: 0, y: 0 });
+  const [PlayerPosition, setPlayerPos] = useState({ x: 0, y: 0 });
   const gridSize = 10;
 
   useEffect(() => {
@@ -30,4 +34,29 @@ function App() {
   );
 }
 
+return (
+    <div className= "App">
+      {currentPage === "home" && (
+        <Home startGame={startGame} />
+        )}
+
+        {currentPage === 'game' && (
+        <Game 
+          level={gameData.level}
+          pseudo={gameData.pseudo}
+          onGameEnd={goToScoreboard}
+        />
+      )}
+
+      {currentPage === 'scoreboard' && (
+        <Scoreboard 
+          isVictory={scoreData.isVictory}
+          score={scoreData.score}
+          pseudo={scoreData.pseudo}
+          onReplay={replay}
+          onBackHome={goToHome}
+        />
+      )}
+    </div>
+);
 export default App
