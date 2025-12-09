@@ -1,4 +1,4 @@
-import ' ./Header.css';
+import '../components/Header.css';
 
 const Header = ({ title = "Labyrinthe"}) => {
     return (

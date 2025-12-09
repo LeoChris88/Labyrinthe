@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Grid from "./game/Grid";
 import Home from "./pages/Home";
 import Scoreboard from "./pages/Scoreboard";
@@ -36,7 +36,7 @@ function App() {
     setCurrentPage("scoreboard");
   };
 
-  // Rejouer avec le même pseudo et niveau
+  // Rejouer
   const replay = () => {
     setCurrentPage("game");
   };
@@ -45,39 +45,31 @@ function App() {
     setCurrentPage("home");
     setGameData({ level: 1, pseudo: "" });
   };
-  
+
   const gridSize = 10;
 
-  useEffect(() => {
-    function handleKey(e) {
-      if (currentPage !== "game") return; // N'écouter les touches que pendant le jeu
-      
-      setPlayerPos(prev => {
-        let { x, y } = prev;
+  // --- NOUVEAU : Déplacement via clic ---
+  const handleTileClick = (x, y) => {
+    setPlayerPos({ x, y });
+  };
 
-        if (e.key === "ArrowUp" || e.key === "z") y = Math.max(0, y - 1);
-        if (e.key === "ArrowDown" || e.key === "s") y = Math.min(gridSize - 1, y + 1);
-        if (e.key === "ArrowLeft" || e.key === "q") x = Math.max(0, x - 1);
-        if (e.key === "ArrowRight" || e.key === "d") x = Math.min(gridSize - 1, x + 1);
+  // --- FIN : plus de useEffect clavier ---
 
-        return { x, y };
-      });
-    }
-
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [currentPage]);
-
-  // RENDU CONDITIONNEL ICI
   return (
     <div className="App">
+
       {currentPage === "home" && (
         <Home onStartGame={startGame} />
       )}
 
       {currentPage === "game" && (
         <div style={{ display: "flex", justifyContent: "center", marginTop: "80px" }}>
-          <Grid PlayerPosition={PlayerPosition} gridSize={gridSize} />
+          <Grid
+            PlayerPosition={PlayerPosition}
+            gridSize={gridSize}
+            onTileClick={handleTileClick}   // ← ajouté
+            goToScoreboard={goToScoreboard} // si ton Grid l'utilise
+          />
         </div>
       )}
 
@@ -90,6 +82,7 @@ function App() {
           onBackHome={goToHome}
         />
       )}
+
     </div>
   );
 }
