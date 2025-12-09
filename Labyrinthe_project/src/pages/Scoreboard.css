@@ -1,0 +1,138 @@
+.scoreboard-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.scoreboard-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+}
+
+.result-card,
+.highscores-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+}
+
+.result-card.victory { border: 3px solid #48bb78; }
+.result-card.defeat { border: 3px solid #f56565; }
+
+.result-title {
+  margin: 0 0 1rem;
+  font-size: 2.2rem;
+}
+
+.result-card.victory .result-title { color: #48bb78; }
+.result-card.defeat .result-title { color: #f56565; }
+
+.player-pseudo,
+.player-score {
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+.player-pseudo { color: #2d3748; font-size: 1.4rem; }
+.player-score { color: #667eea; font-size: 1.8rem; }
+
+.highscores-section h3 {
+  text-align: center;
+  margin: 0;
+  font-size: 1.6rem;
+  color: #2d3748;
+}
+
+.no-scores {
+  text-align: center;
+  color: #718096;
+  font-style: italic;
+  padding: 1.5rem;
+}
+
+.highscores-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.highscores-table th {
+  background: #667eea;
+  color: #fff;
+  padding: 0.8rem;
+  text-align: left;
+}
+
+.highscores-table td {
+  padding: 0.7rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.highscores-table tbody tr:hover { background: #f7fafc; }
+.highscores-table tbody tr.current-player {
+  background: #fef5e7;
+  font-weight: bold;
+}
+
+.status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.status.victory {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.status.defeat {
+  background: #fed7d7;
+  color: #742a2a;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+  background: #667eea;
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-secondary:hover { background: #f7fafc; }
+
+@media (max-width: 768px) {
+  .scoreboard-container { padding: 1rem; }
+  .result-title { font-size: 1.8rem; }
+  .highscores-table { font-size: 0.85rem; }
+  .highscores-table th,
+  .highscores-table td { padding: 0.5rem; }
+  .action-buttons { flex-direction: column; }
+  .btn { width: 100%; }
+}
