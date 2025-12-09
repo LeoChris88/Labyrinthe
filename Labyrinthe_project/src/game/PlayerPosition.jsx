@@ -13,7 +13,6 @@ function PlayerPosition({ row, col }) {
                 fontWeight: "bold",
             }}
         >
-            🧍
         </div>
     );
 }

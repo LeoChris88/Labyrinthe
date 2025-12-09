@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Grid from "./game/Grid";
 
 function App() {
-  const [PlayerPosition, setPlayerPos] = useState({ x: 0, y: 0 });
+  const [playerPosition, setPlayerPos] = useState({ x: 0, y: 0 });
   const gridSize = 10;
 
   useEffect(() => {
@@ -25,7 +25,7 @@ function App() {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: "80px" }}>
-      <Grid PlayerPosition={PlayerPosition} gridSize={gridSize} />
+      <Grid playerPosition={playerPosition} gridSize={gridSize} />
     </div>
   );
 }
