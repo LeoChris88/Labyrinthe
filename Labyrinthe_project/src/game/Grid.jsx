@@ -73,7 +73,11 @@ function Grid({ levelId, goToScoreboard }) {
 
       saveScore("PLAYER", finalScore, levelId);
 
-      goToScoreboard(true, finalScore);
+      goToScoreboard(
+      true,
+      revealed.length,
+      Math.floor((Date.now() - level.startTime) / 1000)
+      );
 
       return prev;
     });

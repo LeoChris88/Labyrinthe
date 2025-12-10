@@ -6,17 +6,23 @@ export const calculateScore = (tilesRevealed, timeInSeconds) => {
 
 export const saveScore = (pseudo, score, isVictory, level) => {
   const scores = getHighScores();
-
-  const newEntry = {
+  const newScore = {
     pseudo,
     score,
+    isVictory,
     level,
-    date: Date.now()
+    date: new Date().toISOString(),
   };
 
-  scores.push(newEntry);
-  localStorage.setItem('scores', JSON.stringify(scores));
-  return newEntry;
+  scores.push(newScore);
+
+  const topScores = scores
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+
+  localStorage.setItem('labyrinth_scores', JSON.stringify(topScores));
+
+  return newScore;
 };
 
 export const getHighScores = () => {
@@ -29,7 +35,7 @@ export const getHighScores = () => {
   }
 };
 
-export const getTopScores = (limit = 10) => {
+export const getTopScores = (limit = 3) => {
   const scores = JSON.parse(localStorage.getItem("scores") || "[]");
 
   const sorted = scores.sort((a, b) => a.score - b.score);

@@ -64,16 +64,6 @@ const Scoreboard = ({ isVictory, score, pseudo, onReplay, onBackHome }) => {
           )}
         </div>
 
-        <button
-          onClick={() => {
-            resetScores();
-            setHighScores([]);
-          }}
-          className="btn btn-danger"
-        >
-          Reset Scores
-        </button>
-
         {/* Actions */}
         <div className="action-buttons">
           <button onClick={onReplay} className="btn btn-primary">

@@ -59,6 +59,11 @@
   font-size: 1rem;
 }
 
+.result-card,
+.highscores-section {
+  color: #000; /* Texte en noir sur fond blanc */
+}
+
 .highscores-table th {
   background: #667eea;
   color: #fff;
