@@ -55,8 +55,6 @@ const Scoreboard = ({ isVictory, score, pseudo, onReplay, onBackHome }) => {
                     <td>{entry.pseudo}</td>
                     <td>{entry.score}</td>
                     <td>{entry.level}</td>
-                    <td className={entry.isVictory ? 'victory' : 'defeat'}>
-                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -34,7 +34,6 @@ function App() {
     setCurrentPage("scoreboard");
   };
 
-  // Rejouer
   const replay = () => {
     setCurrentPage("game");
   };
@@ -60,10 +59,8 @@ function App() {
       {currentPage === "game" && (
         <div style={{ display: "flex", justifyContent: "center", marginTop: "80px" }}>
           <Grid
-            PlayerPosition={PlayerPosition}
             levelId={gameData.level}
-            gridSize={gridSize}
-            onTileClick={handleTileClick}
+            pseudo={gameData.pseudo}
             goToScoreboard={goToScoreboard}
           />
         </div>

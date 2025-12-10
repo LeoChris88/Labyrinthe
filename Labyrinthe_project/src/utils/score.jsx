@@ -1,54 +1,50 @@
-export const calculateScore = (tilesRevealed, timeInSeconds) => {
-  const baseScore = tilesRevealed * 10;
-  const timeBonus = Math.max(0, 1000 - timeInSeconds * 2);
-  return Math.floor(baseScore + timeBonus);
+const STORAGE_KEY = "labyrinth_scores";
+
+export const calculateScore = (tilesRevealed) => {
+  return tilesRevealed;
 };
 
-export const saveScore = (pseudo, score, isVictory, level) => {
-  const scores = getHighScores();
+export const saveScore = (pseudo, score, level) => {
+  const scores = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
   const newScore = {
     pseudo,
     score,
-    isVictory,
     level,
     date: new Date().toISOString(),
   };
 
   scores.push(newScore);
 
-  const topScores = scores
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
+  scores.sort((a, b) => a.score - b.score);
 
-  localStorage.setItem('labyrinth_scores', JSON.stringify(topScores));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
 
   return newScore;
 };
 
 export const getHighScores = () => {
   try {
-    const rawData = localStorage.getItem('labyrinth_scores');
-    return rawData ? JSON.parse(rawData) : [];
-  } catch (error) {
-    console.error('lecture des scores échouée :', error);
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw).sort((a, b) => a.score - b.score);
+  } catch (e) {
+    console.error("Erreur lecture scores :", e);
     return [];
   }
 };
 
 export const getTopScores = (limit = 3) => {
-  const scores = JSON.parse(localStorage.getItem("scores") || "[]");
-
-  const sorted = scores.sort((a, b) => a.score - b.score);
-
-  return sorted.slice(0, limit);
+  const scores = getHighScores();
+  return scores.slice(0, limit);
 };
 
 export const isHighScore = (score, limit = 10) => {
-  const topScores = getTopScores(limit);
-  if (topScores.length < limit) return true;
-  return score > topScores[topScores.length - 1].score;
+  const top = getTopScores(limit);
+  if (top.length < limit) return true;
+  return score < top[top.length - 1].score;
 };
 
 export const resetScores = () => {
-  localStorage.setItem("scores", "[]");
+  localStorage.setItem(STORAGE_KEY, "[]");
 };
