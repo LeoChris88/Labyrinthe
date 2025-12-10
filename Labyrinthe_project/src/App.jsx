@@ -18,13 +18,11 @@ function App() {
     pseudo: "",
   });
 
-  // Navigation vers le jeu 
-  const startGame = (pseudo, level = 1) => {
+  const startGame = (pseudo, level) => {
     setGameData({ pseudo, level });
     setCurrentPage("game");
   };
 
-  // Navigation vers le scoreboard
   const goToScoreboard = (isVictory, score) => {
     saveScore(gameData.pseudo, score, isVictory, gameData.level);
 
@@ -63,6 +61,7 @@ function App() {
         <div style={{ display: "flex", justifyContent: "center", marginTop: "80px" }}>
           <Grid
             PlayerPosition={PlayerPosition}
+            levelId={gameData.level}
             gridSize={gridSize}
             onTileClick={handleTileClick}
             goToScoreboard={goToScoreboard}

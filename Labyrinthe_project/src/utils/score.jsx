@@ -7,18 +7,18 @@ export const calculateScore = (tilesRevealed, timeInSeconds) => {
 export const saveScore = (pseudo, score, isVictory, level) => {
   const scores = getHighScores();
 
-  const newScore = {
+  const newEntry = {
     pseudo,
     score,
-    isVictory,
     level,
-    date: new Date().toISOString(),
+    date: Date.now()
   };
 
-  scores.push(newScore);
-  localStorage.setItem('labyrinth_scores', JSON.stringify(scores));
-  return newScore;
+  scores.push(newEntry);
+  localStorage.setItem('scores', JSON.stringify(scores));
+  return newEntry;
 };
+
 export const getHighScores = () => {
   try {
     const rawData = localStorage.getItem('labyrinth_scores');
@@ -28,16 +28,21 @@ export const getHighScores = () => {
     return [];
   }
 };
-export const getTopScores = (limit = 10) => {
-  const scores = getHighScores();
 
-  return scores
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit);
+export const getTopScores = (limit = 10) => {
+  const scores = JSON.parse(localStorage.getItem("scores") || "[]");
+
+  const sorted = scores.sort((a, b) => a.score - b.score);
+
+  return sorted.slice(0, limit);
 };
 
 export const isHighScore = (score, limit = 10) => {
   const topScores = getTopScores(limit);
   if (topScores.length < limit) return true;
   return score > topScores[topScores.length - 1].score;
+};
+
+export const resetScores = () => {
+  localStorage.setItem("scores", "[]");
 };

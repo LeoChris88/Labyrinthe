@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getTopScores } from '../utils/score';
 import Header from '../components/Header';
 import './Scoreboard.css';
+import { resetScores } from "../utils/score";
 
 const Scoreboard = ({ isVictory, score, pseudo, onReplay, onBackHome }) => {
   const [highScores, setHighScores] = useState([]);
@@ -37,7 +38,6 @@ const Scoreboard = ({ isVictory, score, pseudo, onReplay, onBackHome }) => {
                   <th>Pseudo</th>
                   <th>Score</th>
                   <th>Niveau</th>
-                  <th>Statut</th>
                 </tr>
               </thead>
 
@@ -63,6 +63,16 @@ const Scoreboard = ({ isVictory, score, pseudo, onReplay, onBackHome }) => {
             </table>
           )}
         </div>
+
+        <button
+          onClick={() => {
+            resetScores();
+            setHighScores([]);
+          }}
+          className="btn btn-danger"
+        >
+          Reset Scores
+        </button>
 
         {/* Actions */}
         <div className="action-buttons">
