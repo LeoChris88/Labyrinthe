@@ -5,8 +5,8 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
   const [level, setLevel] = useState(null);
   const [player, setPlayer] = useState(null);
   const [revealed, setRevealed] = useState([]);
-  const [inventory, setInventory] = useState([]); // ⭐ INVENTAIRE
-  const [message, setMessage] = useState("");      // ⭐ MESSAGES ACTIONS
+  const [inventory, setInventory] = useState([]);
+  const [message, setMessage] = useState("");
 
   const endedRef = useRef(false);
 
@@ -38,9 +38,6 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     (r === player.row && Math.abs(c - player.col) === 1) ||
     (c === player.col && Math.abs(r - player.row) === 1);
 
-  /* ----------------------------------------------------
-     ⭐ LOGIQUES AVANCÉES : KEYS / DOORS / ITEMS / OBSTACLES / MONSTERS
-  ------------------------------------------------------ */
   const hasItem = (id) => inventory.includes(id);
 
   const parseTile = (val) => {
@@ -57,15 +54,12 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
   const canPass = (tile) => {
     const parsed = parseTile(tile);
 
-    // mur, jamais passable
     if (parsed.type === "W") return false;
 
-    // Porte colorée : D:red
     if (parsed.type === "D") {
       return hasItem(`key_${parsed.data}`);
     }
 
-    // Obstacle : O:fire, O:water…
     if (parsed.type === "O") {
       if (parsed.data === "fire") return hasItem("water_bucket");
       if (parsed.data === "rock") return hasItem("pickaxe");
@@ -73,49 +67,40 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
       return false;
     }
 
-    // Monstre
     if (parsed.type === "M") {
-      return hasItem("sword"); // exemple : besoin d’une épée
+      return hasItem("pickaxe");
     }
 
-    return true; // case simple (C, I, K…)
+    return true;
   };
 
   const interact = (r, c, tile) => {
     const parsed = parseTile(tile);
 
-    // ⭐ Item normal
     if (parsed.type === "I") {
       setInventory((inv) => [...inv, parsed.data]);
       setMessage(`📦 Objet obtenu : ${parsed.data}`);
     }
 
-    // ⭐ Clé K:red
     if (parsed.type === "K") {
       const keyId = `key_${parsed.data}`;
       setInventory((inv) => [...inv, keyId]);
       setMessage(`🗝️ Clé obtenue : ${parsed.data}`);
     }
 
-    // ⭐ Monstre M:goblin
     if (parsed.type === "M") {
       setMessage("⚔️ Combat ! Le monstre est vaincu.");
     }
 
-    // ⭐ Porte (déjà validée)
     if (parsed.type === "D") {
       setMessage(`🚪 Porte ${parsed.data} ouverte`);
     }
 
-    // ⭐ Obstacle
     if (parsed.type === "O") {
       setMessage(`🛠️ Obstacle franchi : ${parsed.data}`);
     }
   };
 
-  /* ----------------------------------------------------
-     ⭐ CLICK HANDLER PRINCIPAL
-  ------------------------------------------------------ */
   const handleClick = (r, c) => {
     if (!isAdjacent(r, c)) return;
 
@@ -131,11 +116,9 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
       return;
     }
 
-    // On peut marcher
     setPlayer({ row: r, col: c });
     interact(r, c, tile);
 
-    // Fin ?
     if (tile === "E" && !endedRef.current) {
       endedRef.current = true;
 
@@ -146,10 +129,6 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
       }, 300);
     }
   };
-
-  /* ----------------------------------------------------
-     ⭐ AFFICHAGE TUILES
-  ------------------------------------------------------ */
 
   const getTileColor = (val, isPlayer) => {
     if (isPlayer) return "tile-player";
@@ -166,7 +145,6 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
 
   return (
     <div>
-      {/* ---------------------- INVENTAIRE ---------------------- */}
       <div className="inventory">
         <h3>🎒 Inventaire</h3>
         {inventory.length === 0 ? (
@@ -179,11 +157,7 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
           </ul>
         )}
       </div>
-
-      {/* ---------------------- MESSAGE ---------------------- */}
       {message && <p className="message-box">{message}</p>}
-
-      {/* ---------------------- GRILLE ---------------------- */}
       <div
         className="grid"
         style={{
