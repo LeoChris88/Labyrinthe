@@ -1,0 +1,50 @@
+.tile {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    font-size: 20px;
+}
+
+/* ---- Couleurs ---- */
+
+.tile-wall {
+    background: #333;
+}
+
+.tile-start {
+    background: green;
+    color: white;
+}
+
+.tile-end {
+    background: red;
+    color: white;
+}
+
+.tile-default {
+    background: #eee;
+}
+
+/* ---- Types spéciaux ---- */
+.tile-monster {
+    background: #f3b4b4;
+}
+
+.tile-key {
+    background: #f8e5a4;
+}
+
+.tile-door {
+    background: #cfc798;
+}
+
+.tile-obstacle {
+    background: #e8c1c1;
+}
+
+.tile-item {
+    background: #d6d6f3;
+}

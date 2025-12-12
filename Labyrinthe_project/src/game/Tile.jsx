@@ -1,32 +1,31 @@
+import "./Tile.css";
+
 function Tile({ value }) {
-    const isWall = value === "W";
-    const isStart = value === "S";
-    const isEnd = value === "E";
+    const getType = () => {
+        if (value === "W") return "wall";
+        if (value === "S") return "start";
+        if (value === "E") return "end";
+        if (value.startsWith("M:")) return "monster";
+        if (value.startsWith("K:")) return "key";
+        if (value.startsWith("D:")) return "door";
+        if (value.startsWith("O:")) return "obstacle";
+        if (value.startsWith("I:")) return "item";
+        return "default";
+    };
+
+    const type = getType();
+
+    const icons = {
+        monster: "👾",
+        key: "🔑",
+        door: "🚪",
+        obstacle: "⚠️",
+        item: "📦",
+    };
 
     return (
-        <div
-            style={{
-                width: "40px",
-                height: "40px",
-                border: "1px solid #ccc",
-                background: isWall
-                    ? "#333"
-                    : isStart
-                    ? "green"
-                    : isEnd
-                    ? "red"
-                    : "#eee",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "20px"
-            }}
-        >
-            {value.startsWith("M:") && "👾"}
-            {value.startsWith("K:") && "🔑"}
-            {value.startsWith("D:") && "🚪"}
-            {value.startsWith("O:") && "⚠️"}
-            {value.startsWith("I:") && "📦"}
+        <div className={`tile tile-${type}`}>
+            {icons[type] || ""}
         </div>
     );
 }
