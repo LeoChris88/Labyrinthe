@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { saveScore } from "../utils/score";
+import "./Grid.css";
 
 function Grid({ levelId, pseudo, goToScoreboard }) {
   const [level, setLevel] = useState(null);
   const [player, setPlayer] = useState(null);
   const [revealed, setRevealed] = useState([]);
-  
-  // Empêche score multiple
+
   const endedRef = useRef(false);
 
   useEffect(() => {
     const loadLevel = async () => {
-      endedRef.current = false; // reset fin de partie
+      endedRef.current = false;
       const res = await fetch(`http://localhost:4000/api/levels/${levelId}`);
       const data = await res.json();
 
@@ -25,8 +25,7 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
 
   if (!level) return <p>Chargement...</p>;
 
-  const rows = level.rows;
-  const cols = level.cols;
+  const { rows, cols } = level;
 
   const isRevealed = (r, c) =>
     revealed.some(([rr, cc]) => rr === r && cc === c);
@@ -35,24 +34,19 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     (r === player.row && Math.abs(c - player.col) === 1) ||
     (c === player.col && Math.abs(r - player.row) === 1);
 
-  const isWalkable = (value) => {
-    if (value === "W") return false;
-    if (value.startsWith("M:")) return false;
-    if (value.startsWith("O:")) return false;
-    if (value.startsWith("D:")) return false;
-    return true;
-  };
+  const isWalkable = (value) =>
+    !["W", "M:", "O:", "D:"].some((prefix) => value.startsWith(prefix));
 
   const handleClick = (r, c) => {
     if (!isAdjacent(r, c)) return;
 
     const tile = level.grid[r][c];
 
-    setRevealed((prev) => {
-      const exists = prev.some(([rr, cc]) => rr === r && cc === c);
-      if (exists) return prev;
-      return [...prev, [r, c]];
-    });
+    setRevealed((prev) =>
+      prev.some(([rr, cc]) => rr === r && cc === c)
+        ? prev
+        : [...prev, [r, c]]
+    );
 
     if (!isWalkable(tile)) return;
 
@@ -62,7 +56,6 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
       endedRef.current = true;
 
       const finalScore = revealed.length + 1;
-
       saveScore(pseudo, finalScore, level);
 
       setTimeout(() => {
@@ -72,27 +65,24 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
   };
 
   const getTileColor = (val, isPlayer) => {
-    if (isPlayer) return "#ffe600";
-    if (val === "S") return "#4da6ff";
-    if (val === "E") return "#50c878";
-    if (val === "W") return "#111";
-
-    if (val.startsWith("M:")) return "#cc4444";
-    if (val.startsWith("O:")) return "#e08a00";
-    if (val.startsWith("D:")) return "#8855cc";
-    if (val.startsWith("K:")) return "#ffdd55";
-    if (val.startsWith("I:")) return "#55e1e1";
-
-    return "#dcdcdc";
+    if (isPlayer) return "tile-player";
+    if (val === "S") return "tile-start";
+    if (val === "E") return "tile-end";
+    if (val === "W") return "tile-wall";
+    if (val.startsWith("M:")) return "tile-monster";
+    if (val.startsWith("O:")) return "tile-obstacle";
+    if (val.startsWith("D:")) return "tile-door";
+    if (val.startsWith("K:")) return "tile-key";
+    if (val.startsWith("I:")) return "tile-item";
+    return "tile-default";
   };
 
   return (
     <div
+      className="grid"
       style={{
-        display: "grid",
         gridTemplateColumns: `repeat(${cols}, 40px)`,
         gridTemplateRows: `repeat(${rows}, 40px)`,
-        gap: "3px",
       }}
     >
       {level.grid.map((row, r) =>
@@ -104,17 +94,9 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
             <div
               key={`${r}-${c}`}
               onClick={() => handleClick(r, c)}
-              style={{
-                width: "40px",
-                height: "40px",
-                border: "1px solid #222",
-                background: rev ? getTileColor(cell, isPlayerTile) : "#2b2b2b",
-                color: "#fff",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: isAdjacent(r, c) ? "pointer" : "default",
-              }}
+              className={`tile ${
+                rev ? getTileColor(cell, isPlayerTile) : "tile-hidden"
+              } ${isAdjacent(r, c) ? "tile-clickable" : ""}`}
             >
               {rev ? cell : ""}
             </div>

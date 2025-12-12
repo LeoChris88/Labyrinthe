@@ -1,0 +1,65 @@
+.grid {
+  display: grid;
+  gap: 3px;
+}
+
+.tile {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #222;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+/* États */
+.tile-hidden {
+  background: #2b2b2b;
+}
+
+.tile-clickable {
+  cursor: pointer;
+}
+
+/* Couleurs des tuiles */
+.tile-player {
+  background: #ffe600;
+}
+
+.tile-start {
+  background: #4da6ff;
+}
+
+.tile-end {
+  background: #50c878;
+}
+
+.tile-wall {
+  background: #111;
+}
+
+.tile-monster {
+  background: #cc4444;
+}
+
+.tile-obstacle {
+  background: #e08a00;
+}
+
+.tile-door {
+  background: #8855cc;
+}
+
+.tile-key {
+  background: #ffdd55;
+}
+
+.tile-item {
+  background: #55e1e1;
+}
+
+.tile-default {
+  background: #dcdcdc;
+}
