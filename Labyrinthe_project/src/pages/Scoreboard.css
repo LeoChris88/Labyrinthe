@@ -1,12 +1,18 @@
 .scoreboard-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .scoreboard-container {
   max-width: 800px;
   margin: auto;
   padding: 2rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .eligibility-warning {
@@ -42,16 +48,27 @@
   margin-bottom: 2rem;
 }
 
-.result-card.victory { border: 3px solid #48bb78; }
-.result-card.defeat { border: 3px solid #f56565; }
+.result-card.victory { 
+  border: 3px solid #48bb78; 
+}
+
+.result-card.defeat { 
+  border: 3px solid #f56565; 
+}
 
 .result-title {
   margin: 0 0 1rem;
   font-size: 2.2rem;
+  font-weight: 600;
 }
 
-.result-card.victory .result-title { color: #48bb78; }
-.result-card.defeat .result-title { color: #f56565; }
+.result-card.victory .result-title { 
+  color: #2f855a; 
+}
+
+.result-card.defeat .result-title { 
+  color: #742a2a; 
+}
 
 .player-pseudo,
 .player-score {
@@ -59,8 +76,15 @@
   margin: 0.5rem 0;
 }
 
-.player-pseudo { color: #2d3748; font-size: 1.4rem; }
-.player-score { color: #667eea; font-size: 1.8rem; }
+.player-pseudo { 
+  color: #2d3748; 
+  font-size: 1.4rem; 
+}
+
+.player-score { 
+  color: #667eea; 
+  font-size: 1.8rem; 
+}
 
 .highscores-section h3 {
   text-align: center;
@@ -85,7 +109,7 @@
 
 .result-card,
 .highscores-section {
-  color: #000; /* Texte en noir sur fond blanc */
+  color: #000;
 }
 
 .highscores-table th {
@@ -93,6 +117,8 @@
   color: #fff;
   padding: 0.8rem;
   text-align: left;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .highscores-table td {
@@ -100,7 +126,10 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.highscores-table tbody tr:hover { background: #f7fafc; }
+.highscores-table tbody tr:hover { 
+  background: #f7fafc; 
+}
+
 .highscores-table tbody tr.current-player {
   background: #fef5e7;
   font-weight: bold;
@@ -154,14 +183,33 @@
   border: 2px solid #667eea;
 }
 
-.btn-secondary:hover { background: #f7fafc; }
+.btn-secondary:hover { 
+  background: #f7fafc; 
+}
 
 @media (max-width: 768px) {
-  .scoreboard-container { padding: 1rem; }
-  .result-title { font-size: 1.8rem; }
-  .highscores-table { font-size: 0.85rem; }
+  .scoreboard-container { 
+    padding: 1rem; 
+  }
+
+  .result-title { 
+    font-size: 1.8rem; 
+  }
+
+  .highscores-table { 
+    font-size: 0.85rem; 
+  }
+
   .highscores-table th,
-  .highscores-table td { padding: 0.5rem; }
-  .action-buttons { flex-direction: column; }
-  .btn { width: 100%; }
+  .highscores-table td { 
+    padding: 0.5rem; 
+  }
+
+  .action-buttons { 
+    flex-direction: column; 
+  }
+
+  .btn { 
+    width: 100%; 
+  }
 }

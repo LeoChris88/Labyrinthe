@@ -3,17 +3,25 @@ import { getTopScores, getPerfectScore, getMaxAllowedScore } from '../utils/scor
 import Header from '../components/Header';
 import './Scoreboard.css';
 
-const Scoreboard = ({ isVictory, score, pseudo, level, isEligible, onReplay, onBackHome }) => {
+const Scoreboard = ({ 
+  isVictory, 
+  score, 
+  pseudo, 
+  level, 
+  isEligible, 
+  onReplay, 
+  onBackHome 
+}) => {
+
   const [highScores, setHighScores] = useState([]);
 
   useEffect(() => {
     console.log("=== SCOREBOARD CHARGÉ ===");
     console.log("Props reçues:", { isVictory, score, pseudo, level, isEligible });
-    
-    // CORRECTION : passer le niveau en premier paramètre
+
     const scores = getTopScores(level, 3);
-    
     console.log("Scores à afficher dans le jeu:", scores);
+
     setHighScores(scores);
   }, [level]);
 
@@ -25,7 +33,6 @@ const Scoreboard = ({ isVictory, score, pseudo, level, isEligible, onReplay, onB
       <Header title="Résultats" />
 
       <div className="scoreboard-container">
-        {/* Résultat de la partie */}
         <div className={`result-card ${isVictory ? 'victory' : 'defeat'}`}>
           <h2 className="result-title">
             {isEligible ? 'Niveau terminé !' : 'Défaite'}
@@ -35,9 +42,9 @@ const Scoreboard = ({ isVictory, score, pseudo, level, isEligible, onReplay, onB
             <p className="player-score">Score : {score} clics</p>
 
             {!isEligible && (
-              <p className = "eligibility-warning">
-                Score non éligible !
-                Score non éligible (votre score doit être ≤ {maxAllowed} clics)
+              <p className="eligibility-warning">
+                Score non éligible !<br />
+                Votre score doit être ≤ {maxAllowed} clics.<br />
                 (Parcours parfait : {perfectScore} clics + 3 bonus)
               </p>
             )}
@@ -51,7 +58,6 @@ const Scoreboard = ({ isVictory, score, pseudo, level, isEligible, onReplay, onB
           </div>
         </div>
 
-        {/* Meilleurs scores */}
         <div className="highscores-section">
           <h3>🏆 Top 3 - Niveau {level}</h3>
 
@@ -86,15 +92,14 @@ const Scoreboard = ({ isVictory, score, pseudo, level, isEligible, onReplay, onB
           )}
         </div>
 
-        {/* Actions */}
         <div className="action-buttons">
           <button onClick={onReplay} className="btn btn-primary">
-          Rejouer
+            Rejouer
           </button>
 
           {onBackHome && (
             <button onClick={onBackHome} className="btn btn-secondary">
-            Accueil
+              Accueil
             </button>
           )}
         </div>
