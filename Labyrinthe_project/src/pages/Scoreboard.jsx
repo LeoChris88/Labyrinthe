@@ -16,11 +16,13 @@ const Scoreboard = ({ isVictory, score, pseudo, level, onReplay, onBackHome }) =
 
       <div className="scoreboard-container">
 
-        {/* Résultat de la partie */}
-        <div className={`result-card ${isVictory ? 'victory' : 'defeat'}`}>
-          <h2>{isVictory ? 'Victoire' : 'Défaite'}</h2>
-          <p className="player-pseudo">{pseudo}</p>
-          <p className="player-score">Score : {score}</p>
+        {/* Résultat : Toujours victoire */}
+        <div className="result-card victory">
+          <h2 className="result-title"> Victoire !</h2>
+          <div className="player-info">
+            <p className="player-pseudo">{pseudo}</p>
+            <p className="player-score">Score : {score}</p>
+          </div>
         </div>
 
         <div className="highscores-section">
