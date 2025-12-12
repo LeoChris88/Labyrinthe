@@ -42,11 +42,11 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
 
     const tile = level.grid[r][c];
 
-    setRevealed((prev) =>
-      prev.some(([rr, cc]) => rr === r && cc === c)
-        ? prev
-        : [...prev, [r, c]]
-    );
+    const newRevealed = revealed.some(([rr, cc]) => rr === r && cc === c)
+    ? revealed
+    : [...revealed, [r, c]];
+
+    setRevealed(newRevealed);
 
     if (!isWalkable(tile)) return;
 
@@ -55,11 +55,11 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     if (tile === "E" && !endedRef.current) {
       endedRef.current = true;
 
-      const finalScore = revealed.length + 1;
-      saveScore(pseudo, finalScore, level);
+      const finalScore = newRevealed.length;
+      saveScore(pseudo, finalScore, levelId);
 
       setTimeout(() => {
-        goToScoreboard(levelId, finalScore);
+        goToScoreboard(finalScore);
       }, 0);
     }
   };

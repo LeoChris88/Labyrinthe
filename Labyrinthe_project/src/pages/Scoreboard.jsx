@@ -10,6 +10,8 @@ const Scoreboard = ({ isVictory, score, pseudo, level, onReplay, onBackHome }) =
     setHighScores(getTopScores(10));
   }, [level]);
 
+  
+
   return (
     <div className="scoreboard-page">
       <Header title="Résultats" />
