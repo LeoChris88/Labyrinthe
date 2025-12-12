@@ -23,16 +23,17 @@ function App() {
     setCurrentPage("game");
   };
 
-  const goToScoreboard = (isVictory, score) => {
-    saveScore(gameData.pseudo, score, isVictory, gameData.level);
+  const goToScoreboard = (score) => {
+  saveScore(gameData.pseudo, score, gameData.level);
 
-    setScoreData({
-      isVictory,
-      score,
-      pseudo: gameData.pseudo,
-    });
-    setCurrentPage("scoreboard");
-  };
+  setScoreData({
+    score,
+    pseudo: gameData.pseudo,
+    level: gameData.level,
+  });
+
+  setCurrentPage("scoreboard");
+};
 
   const replay = () => {
     setCurrentPage("game");
@@ -71,6 +72,7 @@ function App() {
           isVictory={scoreData.isVictory}
           score={scoreData.score}
           pseudo={scoreData.pseudo}
+          level={gameData.level}
           onReplay={replay}
           onBackHome={goToHome}
         />
@@ -80,4 +82,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 

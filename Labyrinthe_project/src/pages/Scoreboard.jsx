@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
-import { getTopScores } from '../utils/score';
+import { getTopScores, resetScores } from '../utils/score';
 import Header from '../components/Header';
 import './Scoreboard.css';
-import { resetScores } from "../utils/score";
 
-const Scoreboard = ({ isVictory, score, pseudo, onReplay, onBackHome }) => {
+const Scoreboard = ({ isVictory, score, pseudo, level, onReplay, onBackHome }) => {
   const [highScores, setHighScores] = useState([]);
 
   useEffect(() => {
     setHighScores(getTopScores(10));
-  }, []);
+  }, [level]);
 
   return (
     <div className="scoreboard-page">
