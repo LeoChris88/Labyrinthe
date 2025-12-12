@@ -2,7 +2,7 @@ import { useState } from "react";
 import Grid from "./game/Grid";
 import Home from "./pages/Home";
 import Scoreboard from "./pages/Scoreboard";
-import { saveScore } from "./utils/score";
+import { saveScore, isScoreEligible } from "./utils/score"; // ← Ajouter isScoreEligible
 import "./App.css";
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
     isVictory: false,
     score: 0,
     pseudo: "",
+    isEligible: true,
   });
 
   const startGame = (pseudo, level) => {
@@ -24,16 +25,24 @@ function App() {
   };
 
   const goToScoreboard = (score) => {
-  saveScore(gameData.pseudo, score, gameData.level);
+    console.log("goToScoreboard appelé avec score:", score);
+    
+    // CORRECTION : Utiliser isScoreEligible au lieu de isEligible
+    const isEligible = isScoreEligible(score, gameData.level);
+    
+    if (isEligible) {
+      saveScore(gameData.pseudo, score, gameData.level);
+    }
 
-  setScoreData({
-    score,
-    pseudo: gameData.pseudo,
-    level: gameData.level,
-  });
+    setScoreData({
+      score,
+      pseudo: gameData.pseudo,
+      level: gameData.level,
+      isEligible,
+    });
 
-  setCurrentPage("scoreboard");
-};
+    setCurrentPage("scoreboard");
+  };
 
   const replay = () => {
     setCurrentPage("game");
@@ -69,10 +78,10 @@ function App() {
 
       {currentPage === "scoreboard" && (
         <Scoreboard
-          isVictory={scoreData.isVictory}
           score={scoreData.score}
           pseudo={scoreData.pseudo}
           level={gameData.level}
+          isEligible={scoreData.isEligible}
           onReplay={replay}
           onBackHome={goToHome}
         />
@@ -82,4 +91,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;

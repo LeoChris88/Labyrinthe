@@ -9,6 +9,30 @@
   padding: 2rem;
 }
 
+.eligibility-warning {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fed7d7;
+  color: #c53030;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.eligibility-info {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background: #c6f6d5;
+  color: #22543d;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.result-card.defeat {
+  background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+}
+
 .result-card,
 .highscores-section {
   background: #fff;

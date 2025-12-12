@@ -56,7 +56,6 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
       endedRef.current = true;
 
       const finalScore = newRevealed.length;
-      saveScore(pseudo, finalScore, levelId);
 
       setTimeout(() => {
         goToScoreboard(finalScore);
