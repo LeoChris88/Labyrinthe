@@ -265,8 +265,6 @@ app.post("/api/highscores", (req, res) => {
   res.status(201).json(newEntry);
 });
 
-
-
 app.get("/api/enemies", (req, res) => res.json(enemiesCatalog));
 app.get("/api/obstacles", (req, res) => res.json(obstaclesCatalog));
 app.get("/api/items", (req, res) => res.json(itemsCatalog));
