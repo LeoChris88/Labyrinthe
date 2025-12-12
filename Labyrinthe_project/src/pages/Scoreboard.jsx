@@ -16,14 +16,12 @@ const Scoreboard = ({ isVictory, score, pseudo, level, onReplay, onBackHome }) =
 
       <div className="scoreboard-container">
 
-        {/* Résultat de la partie */}
         <div className={`result-card ${isVictory ? 'victory' : 'defeat'}`}>
           <h2>{isVictory ? 'Victoire' : 'Défaite'}</h2>
           <p className="player-pseudo">{pseudo}</p>
           <p className="player-score">Score : {score}</p>
         </div>
 
-        {/* Meilleurs scores */}
         <div className="highscores-section">
           <h3>Meilleurs Scores</h3>
 
@@ -61,7 +59,6 @@ const Scoreboard = ({ isVictory, score, pseudo, level, onReplay, onBackHome }) =
           )}
         </div>
 
-        {/* Actions */}
         <div className="action-buttons">
           <button onClick={onReplay} className="btn btn-primary">
             Rejouer
