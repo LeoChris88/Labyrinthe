@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { TILE_TYPES } from "./TileTypes";
 import { parseTile } from "./TileUtils";
 
 const MONSTER_DAMAGE = 25;
