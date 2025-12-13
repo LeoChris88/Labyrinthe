@@ -31,6 +31,8 @@ const itemsCatalog = [
   { id: "key_blue", kind: "key", color: "blue", name: "Clé bleue", description: "Ouvre porte bleue", icon: "🟦" },
   { id: "water_bucket", kind: "item", name: "Seau d'eau", description: "Éteint le feu", icon: "🪣" },
   { id: "pickaxe", kind: "item", name: "Pioche", description: "Casse les rochers", icon: "⛏️" },
+  { id: "sword", kind: "weapon", damage: 25, name: "Épée", icon: "🗡️" },
+  { id: "axe", kind: "weapon", damage: 40, name: "Hache", icon: "🪓" },
   { id: "swim_boots", kind: "item", name: "Bottes amphibies", description: "Traverse l'eau", icon: "🥾" }
 ];
 
@@ -85,7 +87,7 @@ const levels = [
     grid: [
       ["S","C","C","M:goblin","C","C","W","C"],
       ["W","W","C","W","C","W","C","C"],
-      ["C","C","C","C","C","C","C","W"],
+      ["C","C","I:sword","C","C","C","C","W"],
       ["C","W","W","W","W","C","C","C"],
       ["C","C","C","K:red","C","W","M:slime","C"],
       ["W","W","C","W","D:red","C","C","C"],
@@ -120,12 +122,12 @@ const levels = [
     grid: [
       ["S","C","W","K:red","C","M:goblin","C","W","O:fire","C"],
       ["C","W","W","C","D:red","C","C","W","C","C"],
-      ["C","C","M:slime","C","C","I:pickaxe","W","C","C","W"],
+      ["C","C","M:slime","C","I:pickaxe","C","W","C","C","W"],
       ["W","C","W","C","W","C","C","C","M:orc","C"],
       ["C","C","C","C","O:rock","W","C","W","C","C"],
-      ["W","W","W","C","C","C","C","W","O:water","C"],
+      ["W","C","W","I:sword","C","C","C","W","O:water","C"],
       ["C","C","C","W","C","I:swim_boots","C","W","C","C"],
-      ["C","M:slime","C","C","C","C","C","C","C","C"],
+      ["I:axe","M:slime","C","C","C","C","C","C","C","C"],
       ["C","C","W","C","W","C","C","M:goblin","W","C"],
       ["W","C","C","C","W","C","C","C","W","E"]
     ],
@@ -154,14 +156,14 @@ const levels = [
     grid: [
       ["S","C","C","W","C","M:goblin","C","C","W","C","C","C","O:rock","C","C","W","C","C","C","C"],
       ["W","W","C","W","C","W","C","W","C","C","W","C","C","W","C","C","C","W","M:slime","C"],
-      ["C","C","C","C","C","C","C","C","W","C","C","W","C","C","W","C","W","C","C","C"],
+      ["C","C","C","C","C","C","C","C","W","C","I:sword","W","C","C","W","C","W","C","C","C"],
       ["C","W","W","W","W","C","W","C","C","C","W","C","C","W","C","W","C","C","W","C"],
       ["C","C","C","C","O:fire","C","C","W","C","W","C","C","I:pickaxe","C","C","C","C","W","C","C"],
       ["W","W","W","C","C","C","C","W","C","O:water","C","W","C","W","C","W","C","W","C","C"],
       ["C","C","C","W","C","I:swim_boots","C","W","C","C","C","C","C","C","W","C","C","C","C","W"],
       ["C","M:slime","C","C","C","C","C","C","C","W","C","C","W","C","C","C","W","C","C","C"],
       ["C","C","W","C","W","C","C","M:goblin","W","C","C","C","W","C","W","C","C","C","W","C"],
-      ["W","C","C","C","W","C","C","C","W","C","C","C","C","W","C","C","W","C","C","C"],
+      ["W","I:axe","C","C","W","C","C","C","W","C","C","C","C","W","C","C","W","C","C","C"],
       ["C","W","C","C","C","C","W","C","D:red","W","C","C","M:orc","C","C","C","O:fire","C","W","C"],
       ["C","C","C","W","C","C","W","C","C","C","W","C","C","C","W","C","C","C","C","C"],
       ["C","W","C","C","K:red","C","C","W","C","C","C","W","C","W","C","C","W","C","M:goblin","C"],

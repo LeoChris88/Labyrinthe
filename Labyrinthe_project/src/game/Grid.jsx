@@ -58,7 +58,6 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     if (parsed.type === TILE_TYPES.ITEM) {
       setInventory((prev) => [...prev, parsed.data]);
       setMessage(`📦 Objet obtenu : ${parsed.data}`);
-      updateTile(row, col, TILE_TYPES.CLEAR);
     }
 
     if (parsed.type === TILE_TYPES.KEY) {
@@ -68,21 +67,27 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     }
 
     if (parsed.type === TILE_TYPES.MONSTER) {
-      if (playerHasItem("pickaxe")) {
-        setMessage("⚔️ Vous battez le monstre !");
-        updateTile(row, col, TILE_TYPES.CLEAR);
-      } else {
-        const newHp = hp - 25;
-        setHp(newHp);
-        setMessage("👹 Le monstre vous attaque ! -25 HP");
+    const hasWeapon = inventory.some(item => item.startsWith("weapon_"));
 
-        if (newHp <= 0) {
-          setMessage("☠️ Vous êtes mort…");
-          endGame("defeat", revealedTiles.length);
-        }
+    if (hasWeapon) {
+      setMessage("⚔️ Vous éliminez le monstre !");
+      updateTile(row, col, TILE_TYPES.CLEAR);
+    } 
+    else {
+      const damage = 25;
+      const newHp = hp - damage;
+
+      setHp(newHp);
+      setMessage(`👹 Le monstre vous attaque ! -${damage} HP`);
+
+      if (newHp <= 0) {
+        setMessage("☠️ Vous êtes mort…");
+        endGame("defeat", revealedTiles.length);
       }
     }
-  };
+  }
+}
+
 
   const handleTileClick = (row, col) => {
     if (!isAdjacentTile(row, col)) return;
