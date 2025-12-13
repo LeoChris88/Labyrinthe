@@ -80,16 +80,25 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     if (parsed.type === "I") {
       setInventory((inv) => [...inv, parsed.data]);
       setMessage(`📦 Objet obtenu : ${parsed.data}`);
+
+      level.grid[r][c] = "C";
+      return;
     }
 
     if (parsed.type === "K") {
       const keyId = `key_${parsed.data}`;
       setInventory((inv) => [...inv, keyId]);
       setMessage(`🗝️ Clé obtenue : ${parsed.data}`);
+
+      level.grid[r][c] = "C";
+      return;
     }
 
     if (parsed.type === "M") {
       setMessage("⚔️ Combat ! Le monstre est vaincu.");
+
+      level.grid[r][c] = "C";
+      return;
     }
 
     if (parsed.type === "D") {
@@ -98,6 +107,9 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
 
     if (parsed.type === "O") {
       setMessage(`🛠️ Obstacle franchi : ${parsed.data}`);
+
+      level.grid[r][c] = "C";
+      return;
     }
   };
 
@@ -118,6 +130,14 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
 
     setPlayer({ row: r, col: c });
     interact(r, c, tile);
+
+  const parsed = parseTile(tile);
+  if (parsed.type === "D" && hasItem(`key_${parsed.data}`) && !endedRef.current) {
+    endedRef.current = true;
+    const finalScore = newRevealed.length;
+    setTimeout(() => goToScoreboard(finalScore), 300);
+    return;
+  }
 
     if (tile === "E" && !endedRef.current) {
       endedRef.current = true;
