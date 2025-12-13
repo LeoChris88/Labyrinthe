@@ -33,3 +33,6 @@ Ajout des fichiers TileTypes.jsx, TileUtils.jsx, et UseGame.jsx.
 Ajout des armes dans l'API
 
 18:16 : Finition de la partie 16/20, ajout des stats des monstres + armes dans le fichier CombatConfig, ajout gestion de combat dans Grid.jsx.
+
+23:15 : Refacto dans les fichiers suivants : Grid.jsx, UseGame.jsx et App.jsx.
+Le test du jeu est approuvé, son fonctionnement est conforme à la consigne.
