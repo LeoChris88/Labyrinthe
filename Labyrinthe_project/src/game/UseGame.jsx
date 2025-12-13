@@ -26,12 +26,20 @@ export function useGame(levelId, goToScoreboard) {
       const data = await response.json();
 
       setLevel(data);
-      setPlayer({ row: data.start.row, col: data.start.col });
+      setPlayer({
+        row: data.start.row,
+        col: data.start.col,
+      });
+
+      // Révèle uniquement la tuile de départ
       setRevealedTiles([[data.start.row, data.start.col]]);
       setInventory([]);
       setMessage("");
       setHp(INITIAL_HP);
+
+      //HP de tous les monstres sur la grille
       const initialMonstersHp = {};
+
       data.grid.forEach((row, r) => {
         row.forEach((cell, c) => {
           if (cell.startsWith("M:")) {
@@ -40,12 +48,14 @@ export function useGame(levelId, goToScoreboard) {
           }
         });
       });
+
       setMonstersHp(initialMonstersHp);
     }
 
     loadLevel();
   }, [levelId]);
 
+  // Modifie une tuile précise de la grille (exemple : la suppression d’un monstre après combat)
   const updateTile = (row, col, value) => {
     setLevel((prev) => ({
       ...prev,
@@ -57,8 +67,10 @@ export function useGame(levelId, goToScoreboard) {
     }));
   };
 
+  // Termine la partie et affiche le scoreboard, protège contre les appels multiples
   const endGame = (result, score) => {
     if (gameEnded.current) return;
+
     gameEnded.current = true;
 
     setTimeout(() => {
@@ -66,6 +78,7 @@ export function useGame(levelId, goToScoreboard) {
     }, 300);
   };
 
+  // Retourne les données et fonctions nécessaires au jeu
   return {
     level,
     player,

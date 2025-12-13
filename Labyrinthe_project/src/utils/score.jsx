@@ -1,5 +1,3 @@
-// ---- SCORE STORAGE PAR NIVEAU ----
-
 // Retourne la clé de stockage pour un niveau donné
 const getStorageKey = (level) => `labyrinth_scores_level_${level}`;
 const PERFECT_SCORES = {

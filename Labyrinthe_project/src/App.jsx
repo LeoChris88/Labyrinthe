@@ -2,7 +2,7 @@ import { useState } from "react";
 import Grid from "./game/Grid";
 import Home from "./pages/Home";
 import Scoreboard from "./pages/Scoreboard";
-import { saveScore, isScoreEligible } from "./utils/score"; // ← Ajouter isScoreEligible
+import { saveScore, isScoreEligible } from "./utils/score";
 import "./App.css";
 
 function App() {
@@ -11,7 +11,9 @@ function App() {
     level: 1,
     pseudo: "",
   });
+
   const [PlayerPosition, setPlayerPos] = useState({ x: 0, y: 0 });
+
   const [scoreData, setScoreData] = useState({
     isVictory: false,
     score: 0,
@@ -25,7 +27,6 @@ function App() {
   };
 
   const goToScoreboard = ({ score, result }) => {
-
     const isEligible =
       result === "victory" && isScoreEligible(score, gameData.level);
 
@@ -61,13 +62,18 @@ function App() {
 
   return (
     <div className="App">
-
       {currentPage === "home" && (
         <Home onStartGame={startGame} />
       )}
 
       {currentPage === "game" && (
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "80px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "80px",
+          }}
+        >
           <Grid
             levelId={gameData.level}
             pseudo={gameData.pseudo}
@@ -86,7 +92,6 @@ function App() {
           onBackHome={goToHome}
         />
       )}
-
     </div>
   );
 }
