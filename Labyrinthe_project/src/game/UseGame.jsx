@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { parseTile } from "./TileUtils";
+import { MONSTERS } from "./CombatConfig";
 
 const MONSTER_DAMAGE = 25;
 const INITIAL_HP = 75;
@@ -11,6 +12,7 @@ export function useGame(levelId, goToScoreboard) {
   const [inventory, setInventory] = useState([]);
   const [message, setMessage] = useState("");
   const [hp, setHp] = useState(INITIAL_HP);
+  const [monstersHp, setMonstersHp] = useState({});
 
   const gameEnded = useRef(false);
 
@@ -29,6 +31,16 @@ export function useGame(levelId, goToScoreboard) {
       setInventory([]);
       setMessage("");
       setHp(INITIAL_HP);
+      const initialMonstersHp = {};
+      data.grid.forEach((row, r) => {
+        row.forEach((cell, c) => {
+          if (cell.startsWith("M:")) {
+            const type = cell.split(":")[1];
+            initialMonstersHp[`${r}-${c}`] = MONSTERS[type].hp;
+          }
+        });
+      });
+      setMonstersHp(initialMonstersHp);
     }
 
     loadLevel();
@@ -70,5 +82,7 @@ export function useGame(levelId, goToScoreboard) {
     updateTile,
     endGame,
     gameEnded,
+    monstersHp,
+    setMonstersHp,
   };
 }

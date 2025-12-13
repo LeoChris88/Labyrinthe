@@ -2,25 +2,27 @@ import "./Grid.css";
 import { TILE_TYPES } from "./TileTypes";
 import { getTileClass } from "./TileUtils";
 import { useGame } from "./UseGame";
+import { WEAPONS, MONSTERS } from "./CombatConfig";
 
 function Grid({ levelId, pseudo, goToScoreboard }) {
   const {
-    level,
-    player,
-    setPlayer,
-    revealedTiles,
-    setRevealedTiles,
-    inventory,
-    setInventory,
-    message,
-    setMessage,
-    hp,
-    setHp,
-    parseTile,
-    updateTile,
-    endGame,
-    gameEnded,
-  } = useGame(levelId, goToScoreboard);
+  level,
+  player,
+  setPlayer,
+  revealedTiles,
+  setRevealedTiles,
+  inventory,
+  setInventory,
+  message,
+  setMessage,
+  hp,
+  setHp,
+  monstersHp,
+  setMonstersHp,
+  parseTile,
+  updateTile,
+  endGame,
+} = useGame(levelId, goToScoreboard);
 
   if (!level) return <p>Chargement...</p>;
 
@@ -48,16 +50,48 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
       if (parsed.data === "water") return playerHasItem("swim_boots");
       return false;
     }
+    if (parsed.type === TILE_TYPES.OBSTACLE) {
+      if (parsed.data === "rock" && playerHasItem("pickaxe")) {
+        setMessage("🪨 Vous cassez la roche avec la pioche !");
+        updateTile(row, col, TILE_TYPES.CLEAR);
+        return;
+      }
+
+      if (parsed.data === "fire" && playerHasItem("water_bucket")) {
+        setMessgae("🔥 Vous éteignez le feu !")
+        updateTile(row, col, TILE_TYPES.CLEAR);
+        return;
+      }
+
+      if (parsed.data === "water" && playerHasItem("swim_boots")) {
+        setMessage("🌊 Vous traversez l’eau.")
+        updateTile(row, col, TILE_TYPES.CLEAR);
+        return;
+      }
+    }
 
     return true;
+  };
+
+  const getPlayerWeapon = () =>
+    inventory.find(item => WEAPONS[item]);
+
+  const getPlayerDamage = () => {
+    const weapon = getPlayerWeapon();
+    return weapon ? WEAPONS[weapon].damage : 0;
   };
 
   const interactWithTile = (row, col, tile) => {
     const parsed = parseTile(tile);
 
     if (parsed.type === TILE_TYPES.ITEM) {
-      setInventory((prev) => [...prev, parsed.data]);
+      setInventory((prev) => {
+        if (prev.includes(parsed.data)) return prev;
+        return [...prev, parsed.data];
+      });
+
       setMessage(`📦 Objet obtenu : ${parsed.data}`);
+      updateTile(row, col, TILE_TYPES.CLEAR);
     }
 
     if (parsed.type === TILE_TYPES.KEY) {
@@ -67,18 +101,48 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     }
 
     if (parsed.type === TILE_TYPES.MONSTER) {
-    const hasWeapon = inventory.some(item => item.startsWith("weapon_"));
+    const monsterType = parsed.data;
+    const monsterKey = `${row}-${col}`;
+    const monster = MONSTERS[monsterType];
 
-    if (hasWeapon) {
-      setMessage("⚔️ Vous éliminez le monstre !");
-      updateTile(row, col, TILE_TYPES.CLEAR);
-    } 
-    else {
-      const damage = 25;
-      const newHp = hp - damage;
+    const playerDamage = getPlayerDamage();
+    const monsterDamage = monster.attack;
 
+    if (playerDamage === 0) {
+      const newHp = hp - monsterDamage;
       setHp(newHp);
-      setMessage(`👹 Le monstre vous attaque ! -${damage} HP`);
+      setMessage(`👹 Le ${monster.name} vous attaque ! -${monsterDamage} HP`);
+
+      if (newHp <= 0) {
+        setMessage("☠️ Vous êtes mort…");
+        endGame("defeat", revealedTiles.length);
+      }
+      return;
+    }
+
+    const remainingHp = monstersHp[monsterKey] - playerDamage;
+
+    if (remainingHp <= 0) {
+      setMessage(`⚔️ Vous avez vaincu le ${monster.name} !`);
+      updateTile(row, col, TILE_TYPES.CLEAR);
+
+      setMonstersHp(prev => {
+        const copy = { ...prev };
+        delete copy[monsterKey];
+        return copy;
+      });
+    } else {
+      setMonstersHp(prev => ({
+        ...prev,
+        [monsterKey]: remainingHp,
+      }));
+
+      const newHp = hp - monsterDamage;
+      setHp(newHp);
+
+      setMessage(
+        `⚔️ Vous infligez ${playerDamage} dégâts au ${monster.name} (-${monsterDamage} HP pour vous)`
+      );
 
       if (newHp <= 0) {
         setMessage("☠️ Vous êtes mort…");
@@ -87,7 +151,6 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     }
   }
 }
-
 
   const handleTileClick = (row, col) => {
     if (!isAdjacentTile(row, col)) return;
