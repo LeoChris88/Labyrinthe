@@ -1,197 +1,118 @@
-import { useState, useEffect, useRef } from "react";
 import "./Grid.css";
+import { TILE_TYPES } from "./TileTypes";
+import { getTileClass } from "./TileUtils";
+import { useGame } from "./UseGame";
 
 function Grid({ levelId, pseudo, goToScoreboard }) {
-  const [level, setLevel] = useState(null);
-  const [player, setPlayer] = useState(null);
-  const [revealed, setRevealed] = useState([]);
-  const [inventory, setInventory] = useState([]);
-  const [message, setMessage] = useState("");
-  const [hp, setHp] = useState(75);
-
-  const endedRef = useRef(false);
-
-  useEffect(() => {
-    const loadLevel = async () => {
-      endedRef.current = false;
-
-      const res = await fetch(`http://localhost:4000/api/levels/${levelId}`);
-      const data = await res.json();
-
-      setLevel(data);
-      setPlayer({ row: data.start.row, col: data.start.col });
-      setRevealed([[data.start.row, data.start.col]]);
-      setInventory([]);
-      setMessage("");
-      setHp(75);
-    };
-
-    loadLevel();
-  }, [levelId]);
+  const {
+    level,
+    player,
+    setPlayer,
+    revealedTiles,
+    setRevealedTiles,
+    inventory,
+    setInventory,
+    message,
+    setMessage,
+    hp,
+    setHp,
+    parseTile,
+    updateTile,
+    endGame,
+    gameEnded,
+  } = useGame(levelId, goToScoreboard);
 
   if (!level) return <p>Chargement...</p>;
 
-  const { rows, cols } = level;
+  const isTileRevealed = (row, col) =>
+    revealedTiles.some(([r, c]) => r === row && c === col);
 
-  const isRevealed = (r, c) =>
-    revealed.some(([rr, cc]) => rr === r && cc === c);
+  const isAdjacentTile = (row, col) =>
+    (row === player.row && Math.abs(col - player.col) === 1) ||
+    (col === player.col && Math.abs(row - player.row) === 1);
 
-  const isAdjacent = (r, c) =>
-    (r === player.row && Math.abs(c - player.col) === 1) ||
-    (c === player.col && Math.abs(r - player.row) === 1);
+  const playerHasItem = (item) => inventory.includes(item);
 
-  const hasItem = (id) => inventory.includes(id);
-
-  const parseTile = (val) => {
-    if (val === "W" || val === "S" || val === "E" || val === "C") return { type: val };
-
-    const [prefix, data] = val.split(":");
-
-    return {
-      type: prefix,
-      data
-    };
-  };
-
-  const canPass = (tile) => {
+  const canMoveOnTile = (tile) => {
     const parsed = parseTile(tile);
 
-    if (parsed.type === "W") return false;
+    if (parsed.type === TILE_TYPES.WALL) return false;
 
-    if (parsed.type === "D") {
-      return hasItem(`key_${parsed.data}`);
+    if (parsed.type === TILE_TYPES.DOOR) {
+      return playerHasItem(`key_${parsed.data}`);
     }
 
-    if (parsed.type === "O") {
-      if (parsed.data === "fire") return hasItem("water_bucket");
-      if (parsed.data === "rock") return hasItem("pickaxe");
-      if (parsed.data === "water") return hasItem("swim_boots");
+    if (parsed.type === TILE_TYPES.OBSTACLE) {
+      if (parsed.data === "fire") return playerHasItem("water_bucket");
+      if (parsed.data === "rock") return playerHasItem("pickaxe");
+      if (parsed.data === "water") return playerHasItem("swim_boots");
       return false;
-    }
-
-    if (parsed.type === "M") {
-      return true;
     }
 
     return true;
   };
 
-  const interact = (r, c, tile) => {
+  const interactWithTile = (row, col, tile) => {
     const parsed = parseTile(tile);
 
-    if (parsed.type === "I") {
-      setInventory((inv) => [...inv, parsed.data]);
+    if (parsed.type === TILE_TYPES.ITEM) {
+      setInventory((prev) => [...prev, parsed.data]);
       setMessage(`📦 Objet obtenu : ${parsed.data}`);
-
-      level.grid[r][c] = "C";
-      return;
+      updateTile(row, col, TILE_TYPES.CLEAR);
     }
 
-    if (parsed.type === "K") {
-      const keyId = `key_${parsed.data}`;
-      setInventory((inv) => [...inv, keyId]);
+    if (parsed.type === TILE_TYPES.KEY) {
+      setInventory((prev) => [...prev, `key_${parsed.data}`]);
       setMessage(`🗝️ Clé obtenue : ${parsed.data}`);
-
-      level.grid[r][c] = "C";
-      return;
+      updateTile(row, col, TILE_TYPES.CLEAR);
     }
 
-    if (parsed.type === "M") {
-      if (hasItem("pickaxe")) {
-        setMessage("⚔️ Vous battez le monstre avec votre pioche !");
-        level.grid[r][c] = "C";
-      }
-      else {
+    if (parsed.type === TILE_TYPES.MONSTER) {
+      if (playerHasItem("pickaxe")) {
+        setMessage("⚔️ Vous battez le monstre !");
+        updateTile(row, col, TILE_TYPES.CLEAR);
+      } else {
         const newHp = hp - 25;
-
         setHp(newHp);
         setMessage("👹 Le monstre vous attaque ! -25 HP");
 
-        if (newHp <= 0 && !endedRef.current) {
-          endedRef.current = true;
+        if (newHp <= 0) {
           setMessage("☠️ Vous êtes mort…");
-
-          setTimeout(() => {
-            goToScoreboard({
-              score: revealed.length,
-              result: "defeat"
-            });
-          }, 300);
+          endGame("defeat", revealedTiles.length);
         }
       }
-      return;
-    }
-
-    if (parsed.type === "D") {
-      setMessage(`🚪 Porte ${parsed.data} ouverte`);
-    }
-
-    if (parsed.type === "O") {
-      setMessage(`🛠️ Obstacle franchi : ${parsed.data}`);
-
-      level.grid[r][c] = "C";
-      return;
     }
   };
 
+  const handleTileClick = (row, col) => {
+    if (!isAdjacentTile(row, col)) return;
 
+    const tile = level.grid[row][col];
 
-  const handleClick = (r, c) => {
-    if (!isAdjacent(r, c)) return;
+    if (!isTileRevealed(row, col)) {
+      setRevealedTiles((prev) => [...prev, [row, col]]);
+    }
 
-    const tile = level.grid[r][c];
-    const newRevealed = isRevealed(r, c)
-      ? revealed
-      : [...revealed, [r, c]];
-
-    setRevealed(newRevealed);
-
-    if (!canPass(tile)) {
+    if (!canMoveOnTile(tile)) {
       setMessage("⛔ Vous n’avez pas l’objet requis !");
       return;
     }
 
-    setPlayer({ row: r, col: c });
-    interact(r, c, tile);
+    setPlayer({ row, col });
+    interactWithTile(row, col, tile);
 
-  const parsed = parseTile(tile);
-  if (parsed.type === "D" && hasItem(`key_${parsed.data}`) && !endedRef.current) {
-    endedRef.current = true;
-    const finalScore = newRevealed.length;
-    setTimeout(() => {
-      goToScoreboard({
-        score: finalScore,
-        result: "victory"
-      });
-    }, 300);
-    return;
-  }
+    const parsed = parseTile(tile);
 
-    if (tile === "E" && !endedRef.current) {
-      endedRef.current = true;
-
-      const finalScore = newRevealed.length;
-
-      setTimeout(() => {
-        goToScoreboard({
-          score: finalScore,
-          result: "victory"
-        });
-      }, 300);
+    if (
+      parsed.type === TILE_TYPES.DOOR &&
+      playerHasItem(`key_${parsed.data}`)
+    ) {
+      endGame("victory", revealedTiles.length + 1);
     }
-  };
 
-  const getTileColor = (val, isPlayer) => {
-    if (isPlayer) return "tile-player";
-    if (val === "S") return "tile-start";
-    if (val === "E") return "tile-end";
-    if (val === "W") return "tile-wall";
-    if (val.startsWith("M:")) return "tile-monster";
-    if (val.startsWith("O:")) return "tile-obstacle";
-    if (val.startsWith("D:")) return "tile-door";
-    if (val.startsWith("K:")) return "tile-key";
-    if (val.startsWith("I:")) return "tile-item";
-    return "tile-default";
+    if (tile === TILE_TYPES.END) {
+      endGame("victory", revealedTiles.length + 1);
+    }
   };
 
   return (
@@ -202,37 +123,39 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
           <p>Aucun objet</p>
         ) : (
           <ul>
-            {inventory.map((item, i) => (
-              <li key={i}>{item}</li>
+            {inventory.map((item) => (
+              <li key={item}>{item}</li>
             ))}
           </ul>
         )}
       </div>
+
       {message && <p className="message-box">{message}</p>}
-      <div className="player-stats">
-        ❤️ HP : {hp}
-      </div>
+      <div className="player-stats">❤️ HP : {hp}</div>
+
       <div
         className="grid"
         style={{
-          gridTemplateColumns: `repeat(${cols}, 40px)`,
-          gridTemplateRows: `repeat(${rows}, 40px)`,
+          gridTemplateColumns: `repeat(${level.cols}, 40px)`,
+          gridTemplateRows: `repeat(${level.rows}, 40px)`,
         }}
       >
         {level.grid.map((row, r) =>
           row.map((cell, c) => {
-            const isPlayerTile = player.row === r && player.col === c;
-            const rev = isRevealed(r, c);
+            const isPlayerHere = player.row === r && player.col === c;
+            const revealed = isTileRevealed(r, c);
 
             return (
               <div
                 key={`${r}-${c}`}
-                onClick={() => handleClick(r, c)}
+                onClick={() => handleTileClick(r, c)}
                 className={`tile ${
-                  rev ? getTileColor(cell, isPlayerTile) : "tile-hidden"
-                } ${isAdjacent(r, c) ? "tile-clickable" : ""}`}
+                  revealed
+                    ? getTileClass(cell, isPlayerHere)
+                    : "tile-hidden"
+                } ${isAdjacentTile(r, c) ? "tile-clickable" : ""}`}
               >
-                {rev ? cell : ""}
+                {revealed ? cell : ""}
               </div>
             );
           })
