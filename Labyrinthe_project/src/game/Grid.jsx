@@ -7,6 +7,7 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
   const [revealed, setRevealed] = useState([]);
   const [inventory, setInventory] = useState([]);
   const [message, setMessage] = useState("");
+  const [hp, setHp] = useState(75);
 
   const endedRef = useRef(false);
 
@@ -22,6 +23,7 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
       setRevealed([[data.start.row, data.start.col]]);
       setInventory([]);
       setMessage("");
+      setHp(75);
     };
 
     loadLevel();
@@ -113,6 +115,8 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     }
   };
 
+
+
   const handleClick = (r, c) => {
     if (!isAdjacent(r, c)) return;
 
@@ -178,6 +182,9 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
         )}
       </div>
       {message && <p className="message-box">{message}</p>}
+      <div className="player-stats">
+        ❤️ HP : {hp}
+      </div>
       <div
         className="grid"
         style={{

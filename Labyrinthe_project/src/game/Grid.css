@@ -63,3 +63,8 @@
 .tile-default {
   background: #dcdcdc;
 }
+
+.player-stats {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
