@@ -24,12 +24,11 @@ function App() {
     setCurrentPage("game");
   };
 
-  const goToScoreboard = (score) => {
-    console.log("goToScoreboard appelé avec score:", score);
-    
-    // CORRECTION : Utiliser isScoreEligible au lieu de isEligible
-    const isEligible = isScoreEligible(score, gameData.level);
-    
+  const goToScoreboard = ({ score, result }) => {
+
+    const isEligible =
+      result === "victory" && isScoreEligible(score, gameData.level);
+
     if (isEligible) {
       saveScore(gameData.pseudo, score, gameData.level);
     }
@@ -39,6 +38,7 @@ function App() {
       pseudo: gameData.pseudo,
       level: gameData.level,
       isEligible,
+      result,
     });
 
     setCurrentPage("scoreboard");

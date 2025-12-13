@@ -70,7 +70,7 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     }
 
     if (parsed.type === "M") {
-      return hasItem("pickaxe");
+      return true;
     }
 
     return true;
@@ -97,9 +97,28 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
     }
 
     if (parsed.type === "M") {
-      setMessage("⚔️ Combat ! Le monstre est vaincu.");
+      if (hasItem("pickaxe")) {
+        setMessage("⚔️ Vous battez le monstre avec votre pioche !");
+        level.grid[r][c] = "C";
+      }
+      else {
+        const newHp = hp - 25;
 
-      level.grid[r][c] = "C";
+        setHp(newHp);
+        setMessage("👹 Le monstre vous attaque ! -25 HP");
+
+        if (newHp <= 0 && !endedRef.current) {
+          endedRef.current = true;
+          setMessage("☠️ Vous êtes mort…");
+
+          setTimeout(() => {
+            goToScoreboard({
+              score: revealed.length,
+              result: "defeat"
+            });
+          }, 300);
+        }
+      }
       return;
     }
 
@@ -139,7 +158,12 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
   if (parsed.type === "D" && hasItem(`key_${parsed.data}`) && !endedRef.current) {
     endedRef.current = true;
     const finalScore = newRevealed.length;
-    setTimeout(() => goToScoreboard(finalScore), 300);
+    setTimeout(() => {
+      goToScoreboard({
+        score: finalScore,
+        result: "victory"
+      });
+    }, 300);
     return;
   }
 
@@ -149,7 +173,10 @@ function Grid({ levelId, pseudo, goToScoreboard }) {
       const finalScore = newRevealed.length;
 
       setTimeout(() => {
-        goToScoreboard(finalScore);
+        goToScoreboard({
+          score: finalScore,
+          result: "victory"
+        });
       }, 300);
     }
   };
