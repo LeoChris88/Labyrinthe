@@ -54,6 +54,12 @@ function App() {
     setGameData({ level: 1, pseudo: "" });
   };
 
+  const goToNextLevel = () => {
+    const nextLevel = gameData.level + 1;
+    setGameData({ pseudo: gameData.pseudo, level: nextLevel });
+    setCurrentPage("game");
+  }
+
   const gridSize = 10;
 
   const handleTileClick = (x, y) => {
@@ -84,12 +90,14 @@ function App() {
 
       {currentPage === "scoreboard" && (
         <Scoreboard
+          isVictory={scoreData.result === "victory"}
           score={scoreData.score}
           pseudo={scoreData.pseudo}
           level={gameData.level}
           isEligible={scoreData.isEligible}
           onReplay={replay}
           onBackHome={goToHome}
+          onNextLevel={goToNextLevel}
         />
       )}
     </div>

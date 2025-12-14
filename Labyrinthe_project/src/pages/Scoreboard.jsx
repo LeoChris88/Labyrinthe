@@ -10,14 +10,21 @@ const Scoreboard = ({
   level, 
   isEligible, 
   onReplay, 
-  onBackHome 
+  onBackHome, 
+  onNextLevel
 }) => {
 
   const [highScores, setHighScores] = useState([]);
+  const maxLevel = 4;
 
   useEffect(() => {
     console.log("=== SCOREBOARD CHARGÉ ===");
-    console.log("Props reçues:", { isVictory, score, pseudo, level, isEligible });
+    console.log("Props reçues:", { score, pseudo, level, isEligible });
+
+    if(!level) {
+      console.error("Niveau invalide, impossible de charger les scores.");
+      return;
+    }
 
     const scores = getTopScores(level, 3);
     console.log("Scores à afficher dans le jeu:", scores);
@@ -27,6 +34,7 @@ const Scoreboard = ({
 
   const perfectScore = getPerfectScore(level);
   const maxAllowed = getMaxAllowedScore(level);
+  const hasNextLevel = level < maxLevel;
 
   return (
     <div className="scoreboard-page">
@@ -44,7 +52,7 @@ const Scoreboard = ({
             {!isEligible && (
               <p className="eligibility-warning">
                 Score non éligible !<br />
-                Votre score doit être ≤ {maxAllowed} clics.<br />
+                Votre score doit être ≤ à {maxAllowed} clics.<br />
                 (Parcours parfait : {perfectScore} clics + 3 bonus)
               </p>
             )}
@@ -96,6 +104,12 @@ const Scoreboard = ({
           <button onClick={onReplay} className="btn btn-primary">
             Rejouer
           </button>
+
+          {isVictory && hasNextLevel && onNextLevel && (
+            <button onClick={onNextLevel} className="btn btn-next">
+              Niveau suivant
+            </button>
+          )}
 
           {onBackHome && (
             <button onClick={onBackHome} className="btn btn-secondary">
