@@ -36,3 +36,9 @@ Ajout des armes dans l'API
 
 23:15 : Refacto dans les fichiers suivants : Grid.jsx, UseGame.jsx et App.jsx.
 Le test du jeu est approuvé, son fonctionnement est conforme à la consigne.
+
+----------------------------------------------------------------------------------------------------------------------------
+Dimanche 14/12/2025 :
+16:16 : Ajout de transition de niveau dans scoreboard.jsx, et App.jsx. 
+Fonctionnement : Quand le joueur à réussi le niveau le bouton "Niveau suivant" apparaît si ce dernier perd, le bouton n'apparait pas à la fin dans le résumé de la partie.  
+Modification de Scoreboard.css avec l'ajout du style du bouton "Niveau suivant" 
