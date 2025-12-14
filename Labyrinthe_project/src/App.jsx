@@ -2,6 +2,7 @@ import { useState } from "react";
 import Grid from "./game/Grid";
 import Home from "./pages/Home";
 import Scoreboard from "./pages/Scoreboard";
+import Tutorial from "./pages/Tutorial";
 import { saveScore, isScoreEligible } from "./utils/score";
 import "./App.css";
 
@@ -11,8 +12,6 @@ function App() {
     level: 1,
     pseudo: "",
   });
-
-  const [PlayerPosition, setPlayerPos] = useState({ x: 0, y: 0 });
 
   const [scoreData, setScoreData] = useState({
     isVictory: false,
@@ -58,18 +57,24 @@ function App() {
     const nextLevel = gameData.level + 1;
     setGameData({ pseudo: gameData.pseudo, level: nextLevel });
     setCurrentPage("game");
-  }
-
-  const gridSize = 10;
-
-  const handleTileClick = (x, y) => {
-    setPlayerPos({ x, y });
   };
+
+  const goToTutorial = () => {
+    setCurrentPage("Tutoriel");
+  };
+
+  const closeTutorial = () => {
+    setCurrentPage("home");
+  }; // ← Accolade fermante ajoutée
 
   return (
     <div className="App">
       {currentPage === "home" && (
-        <Home onStartGame={startGame} />
+        <Home onStartGame={startGame} onShowTutorial={goToTutorial} />
+      )}
+
+      {currentPage === "Tutoriel" && (
+        <Tutorial onClose={closeTutorial} />
       )}
 
       {currentPage === "game" && (

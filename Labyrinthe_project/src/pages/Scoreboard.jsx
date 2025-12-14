@@ -17,6 +17,7 @@ const Scoreboard = ({
   const [highScores, setHighScores] = useState([]);
   const maxLevel = 4;
 
+  // Chargement des meilleurs scores au montage de chaques niveaux
   useEffect(() => {
     console.log("=== SCOREBOARD CHARGÉ ===");
     console.log("Props reçues:", { score, pseudo, level, isEligible });
@@ -83,6 +84,7 @@ const Scoreboard = ({
               <tbody>
                 {highScores.map((entry, index) => (
                   <tr
+                  // Surligne la ligne du joueur actuel si son score est éligible
                     key={`${entry.pseudo}-${entry.score}-${index}`}
                     className={
                       entry.pseudo === pseudo && entry.score === score && isEligible

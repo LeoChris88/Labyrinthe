@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Home({ onStartGame }) {
+function Home({ onStartGame, onShowTutorial }) {
   const [pseudo, setPseudo] = useState("");
   const [level, setLevel] = useState(1);
 
@@ -41,7 +41,7 @@ function Home({ onStartGame }) {
           <option value={4}>Niveau 4</option>
         </select>
       </div>
-
+        
       <button
         onClick={handleStart}
         style={{
@@ -49,9 +49,27 @@ function Home({ onStartGame }) {
           fontSize: "18px",
           cursor: "pointer",
           borderRadius: "6px",
+          background : "667eea",
+          color: "white",
+          border: "none"
         }}
       >
         Jouer
+      </button>
+
+      <button
+        onClick={onShowTutorial}
+        style={{
+          padding: "10px 20px",
+          frontSize: "18px",  
+          cursor: "pointer",  
+          borderRadius: "6px",
+          background : "#48bb78",
+          color: "white",
+          border: "none",
+        }}
+      >
+        Comment jouer à Labyrinthe ?
       </button>
     </div>
   );
