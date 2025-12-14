@@ -42,3 +42,9 @@ Dimanche 14/12/2025 :
 16:16 : Ajout de transition de niveau dans scoreboard.jsx, et App.jsx. 
 Fonctionnement : Quand le joueur à réussi le niveau le bouton "Niveau suivant" apparaît si ce dernier perd, le bouton n'apparait pas à la fin dans le résumé de la partie.  
 Modification de Scoreboard.css avec l'ajout du style du bouton "Niveau suivant" 
+
+18:20 : Ajout d'une page Tutoriel complète pour expliquer les règles du jeu.
+Création des fichiers Tutorial.jsx et Tutorial.css dans le dossier pages.
+Contenu du tutoriel : objectif du jeu, contrôles, types de tuiles (avec visualisation), système de combat, inventaire, scoring et conseils.
+Ajout d'un bouton "Comment jouer ?" sur la page d'accueil via le fichier Home.jsx pour accéder au tutoriel.
+Modification de App.jsx pour gérer la navigation vers la page tutoriel avec les fonctions goToTutorial() et closeTutorial().
